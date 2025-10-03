@@ -1,13 +1,15 @@
-function busquedalineal(arr, elemento) {
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === elemento) {
-            return i;
-        }
-    }
-    return -1;
-}
+const express = require('express')
+const app = express()
 
-const arreglo = [10, 5, 3, 8, 2, 6, 11];
-const elementobuscado = 2;
-const indice = busquedalineal(arreglo, elementobuscado);
-console.log(`El elemento ${elementobuscado} se encuentra en el índice ${indice}`);
+// Define la ruta principal
+app.get('/', (req, res) => {
+    console.log('Servidor creado con express.js')
+    
+    // Lo esencial: ¡Enviar una respuesta al cliente!
+    res.send('¡Hola! Servidor Express activo en la ruta principal.') 
+})
+
+// Inicia el servidor
+app.listen(3000, () => {
+    console.log('Aplicación con express ejecutandose en el puerto 3000')
+})
