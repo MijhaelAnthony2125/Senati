@@ -4,6 +4,7 @@ const userRouter=require('./routers/userRouters')
 const morgan=require('morgan')
 const userLogin=require('./middlewares/userLogin')
 const path=require('path')
+const connection=require('./database/connection')
 
 // 1. CONFIGURACIÓN DE MIDDLEWARES (CORREGIDO el orden)
 app.use(express.json()) // Debe ir al inicio para leer cuerpos JSON
