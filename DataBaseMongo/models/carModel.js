@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const carSchema = new Schema({
-    matricula: { // Campo único para identificar el coche
+    matricula: { 
         type: String,
         required: true,
         unique: true
