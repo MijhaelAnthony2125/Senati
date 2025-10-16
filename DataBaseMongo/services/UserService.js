@@ -9,7 +9,6 @@ class UserService {
     }
 
     async filterById(id) {
-        // Mongoose usa findOne para buscar por _id
         const user = await User.findOne({ _id: id })
         return user
     }
@@ -19,18 +18,14 @@ class UserService {
         return await user.save()
     }
     
-    // ⬇️ LÓGICA DE ACTUALIZACIÓN CORREGIDA ⬇️
     async update(id, data) {
-        // Utilizamos findByIdAndUpdate, que es el método correcto para actualizar por _id.
-        // { new: true } es CRÍTICO para que Mongoose devuelva el documento DESPUÉS de la actualización.
         const updatedUser = await User.findByIdAndUpdate(
             id, 
             data, 
-            { new: true } // Opcional: añade runValidators: true si usas validaciones
+            { new: true } 
         )
         return updatedUser
     }
-    // ⬆️ FIN DE CORRECCIÓN ⬆️
 
     async delete(id) {
         return await User.deleteOne({

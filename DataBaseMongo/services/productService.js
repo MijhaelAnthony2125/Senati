@@ -1,4 +1,4 @@
-const Product = require('../models/productModel');
+const Product = require('../models/productModel'); 
 
 class ProductService {
     async getAll() {
@@ -6,22 +6,25 @@ class ProductService {
     }
 
     async filterById(id) {
-        return await Product.findById(id);
+        return await Product.findOne({ _id: id });
     }
 
     async create(data) {
         const product = new Product(data);
         return await product.save();
     }
-    
     async update(id, data) {
-        // Usa findByIdAndUpdate con { new: true } para devolver el documento actualizado
-        return await Product.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+        const updatedProduct = await Product.findByIdAndUpdate(
+            id, 
+            data, 
+            { new: true } 
+        );
+        return updatedProduct;
     }
-    
     async delete(id) {
-        // Devuelve el resultado de la operación (incluye deletedCount)
-        return await Product.deleteOne({ _id: id });
+        return await Product.deleteOne({
+            _id: id
+        });
     }
 }
 

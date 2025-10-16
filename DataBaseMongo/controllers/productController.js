@@ -1,55 +1,76 @@
 const ProductService = require('../services/productService');
 const productService = new ProductService();
-
-// GET /products
 exports.getAllProducts = async (req, res) => {
-    const products = await productService.getAll();
-    res.status(200).json(products);
-};
-
-// GET /products/:id
-exports.getProduct = async (req, res) => {
-    const product = await productService.filterById(req.params.id);
-    if (!product) {
-        return res.status(404).json({ message: "Producto no encontrado" }); // 404 Not Found
+    try {
+        const products = await productService.getAll();
+        res.status(200).json(products);
+    } catch (error) {
+        console.error('Error fetching all products:', error);
+        res.status(500).json({ message: 'Error interno del servidor al obtener productos.' });
     }
-    res.status(200).json(product);
 };
-
-// POST /products
+exports.getProduct = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const product = await productService.filterById(id);
+        if (!product) {
+            return res.status(404).json({
+                "message": "Producto no encontrado"
+            });
+        }
+        res.status(200).json(product);
+    } catch (error) {
+        console.error(`Error fetching product ${id}:`, error);
+        res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+};
 exports.createProduct = async (req, res) => {
     try {
-        const newProduct = await productService.create(req.body);
-        res.status(201).json('Producto creado exitosamente'); // 201 Created
+        const data = req.body;
+        await productService.create(data);
+        res.status(201).send('Producto creado exitosamente');
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error interno al crear el producto');
+        console.error('Error creating product:', error);
+        res.status(500).send('Error interno del servidor al crear producto');
     }
 };
-
-// PUT /products/:id
 exports.updateProduct = async (req, res) => {
+    const data = req.body;
+    const id = req.params.id;
+
     try {
-        const updatedProduct = await productService.update(req.params.id, req.body);
-        if (!updatedProduct) {
-            return res.status(404).json({ message: "Producto no encontrado para actualizar" }); // 404 Not Found
+        const product = await productService.filterById(id);
+        if (!product) {
+            return res.status(404).json({
+                'message': "Producto no encontrado para actualizar."
+            });
         }
-        res.status(200).json({ message: 'Producto modificado correctamente', product: updatedProduct });
+        
+        await productService.update(id, data);
+        res.status(200).send('Se modificó el Producto correctamente');
+
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al actualizar producto');
+        console.error(`Error updating product ${id}:`, error);
+        res.status(500).json({ message: 'Error interno del servidor al modificar producto.' });
     }
 };
 
-// DELETE /products/:id
 exports.deleteProduct = async (req, res) => {
+    const id = req.params.id;
+    
     try {
-        const result = await productService.delete(req.params.id);
-        if (result.deletedCount === 0) {
-            return res.status(404).json({ message: "Producto no encontrado para eliminar" }); // 404 Not Found
+        const product = await productService.filterById(id);
+        if (!product) {
+            return res.status(404).json({
+                'message': "Producto no encontrado para eliminar."
+            });
         }
-        res.status(204).send(); // 204 No Content para eliminación exitosa
+
+        await productService.delete(id);
+        res.status(200).send('Se eliminó el Producto correctamente');
+
     } catch (error) {
-        res.status(500).send('Error al eliminar producto');
+        console.error(`Error deleting product ${id}:`, error);
+        res.status(500).json({ message: 'Error interno del servidor al eliminar producto.' });
     }
 };

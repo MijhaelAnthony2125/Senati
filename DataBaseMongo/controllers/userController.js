@@ -1,9 +1,6 @@
 const UserService = require('../services/userService')
 const userService = new UserService()
-
-
 exports.getAllUsers = async(req, res) => {
-    //console.log('Accediendo a todos los usuarios')
     const users = await userService.getAll()
     res.status(200).json(users)
 }
@@ -27,9 +24,6 @@ exports.createUser = async(req, res) => {
     } catch (error) {
         res.status(500).send('usuarios registrados')
     }
-    // const { nombre, apellido, email, telefono } = data
-    // console.log(nombre, apellido, email, telefono)
-    // res.send("creado exitosamente")
 }
 
 exports.updateUser = async(req, res) => {
@@ -37,7 +31,6 @@ exports.updateUser = async(req, res) => {
     const id = req.params.id
     const user = await userService.filterById(id)
     if (!user) {
-        // Si no existe el usuario con ese id
         return res.status(400).json({
             'message': "Usuario no encontrado "
         })
